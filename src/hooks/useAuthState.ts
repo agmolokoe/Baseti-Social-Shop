@@ -35,7 +35,7 @@ function useAuthState() {
           // Check for returnTo parameter
           const params = new URLSearchParams(location.search);
           const returnTo = params.get('returnTo');
-          navigate(returnTo || "/dashboard", { replace: true });
+          navigate(returnTo ? decodeURIComponent(returnTo) : "/dashboard", { replace: true });
         }
 
         if (event === "SIGNED_OUT") {
@@ -86,7 +86,7 @@ function useAuthState() {
             // Check if there's a return path in the URL
             const params = new URLSearchParams(location.search);
             const returnTo = params.get('returnTo');
-            navigate(returnTo || '/dashboard', { replace: true });
+            navigate(returnTo ? decodeURIComponent(returnTo) : '/dashboard', { replace: true });
           }
         } catch (err) {
           console.error("Unexpected error checking session:", err);

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, lazy, Suspense } from "react"
+import React, { useEffect, useState, lazy } from "react"
 import { Toaster } from "@/components/ui/toaster"
 import { Toaster as Sonner } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip"
@@ -14,15 +14,13 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner"
 // Import pages directly for better stability with authentication
 import AuthPage from "./pages/AuthPage"
 import LandingPage from "./pages/LandingPage"
-
-// Lazy load other pages that don't need immediate loading
-const Index = lazy(() => import("./pages/Index"))
-const PrivacyPolicy = lazy(() => import("./pages/legal/PrivacyPolicy"))
-const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"))
-const SubscriptionPage = lazy(() => import("./pages/subscription/Index"))
-const BusinessProfileSetupPage = lazy(() => import("./pages/profile/BusinessProfileSetupPage"))
-const StorePage = lazy(() => import("./pages/store/StorePage"))
-const ProductDetailPage = lazy(() => import("./pages/store/ProductDetailPage"))
+import Index from "./pages/Index"
+import PrivacyPolicy from "./pages/legal/PrivacyPolicy"
+import TermsOfService from "./pages/legal/TermsOfService"
+import SubscriptionPage from "./pages/subscription/Index"
+import BusinessProfileSetupPage from "./pages/profile/BusinessProfileSetupPage"
+import StorePage from "./pages/store/StorePage"
+import ProductDetailPage from "./pages/store/ProductDetailPage"
 
 // Loading component
 const PageLoader = () => (
@@ -42,6 +40,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        console.log("Protected route - checking auth state");
         const { data, error } = await supabase.auth.getSession();
         
         if (error) {
@@ -50,8 +49,10 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
         }
         
         if (data.session) {
+          console.log("User is authenticated");
           setAuthenticated(true);
         } else {
+          console.log("User is not authenticated, redirecting to auth");
           // Only redirect if not already on the auth page
           if (location.pathname !== '/auth') {
             // Preserve the original URL the user was trying to access
@@ -74,6 +75,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     
     // Listen for auth state changes while on protected routes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed in ProtectedRoute:", event);
       if (event === 'SIGNED_OUT') {
         setAuthenticated(false);
         navigate('/auth', { replace: true });
@@ -109,8 +111,10 @@ function App() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    console.log("App component - initializing auth state");
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("Initial session check:", session ? "logged in" : "logged out");
       setSession(session)
       setLoading(false)
     })
@@ -119,6 +123,7 @@ function App() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("Auth state changed in App:", _event);
       setSession(session)
     })
 
@@ -137,71 +142,69 @@ function App() {
             <CartProvider>
               <Toaster />
               <Sonner position="top-right" closeButton={true} />
-              <Suspense fallback={<PageLoader />}>
-                <Routes>
-                  <Route
-                    path="/"
-                    element={
-                      !session ? (
-                        <LandingPage />
-                      ) : (
-                        <Navigate to="/dashboard" replace />
-                      )
-                    }
-                  />
-                  <Route
-                    path="/auth"
-                    element={
-                      !session ? (
-                        <AuthPage mode="login" />
-                      ) : (
-                        <Navigate to="/dashboard" replace />
-                      )
-                    }
-                  />
-                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                  <Route path="/terms-of-service" element={<TermsOfService />} />
-                  
-                  {/* Protected routes - will redirect to auth if not logged in */}
-                  <Route
-                    path="/dashboard/*"
-                    element={
-                      <ProtectedRoute>
-                        <Index />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/dashboard/profile/setup"
-                    element={
-                      <ProtectedRoute>
-                        <BusinessProfileSetupPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/dashboard/subscription"
-                    element={
-                      <ProtectedRoute>
-                        <SubscriptionPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  
-                  {/* Public store routes - can be accessed without auth */}
-                  <Route path="/shopapp/:businessId" element={<StorePage />} />
-                  <Route path="/shopapp/:businessId/product/:productId" element={<ProductDetailPage />} />
-                  
-                  {/* Redirects from old routes */}
-                  <Route path="/:businessId" element={<Navigate to="/shopapp/:businessId" replace />} />
-                  <Route path="/:businessId/product/:productId" element={<Navigate to="/shopapp/:businessId/product/:productId" replace />} />
-                  <Route path="/store/:businessId" element={<Navigate to="/shopapp/:businessId" replace />} />
-                  <Route path="/store/:businessId/product/:productId" element={<Navigate to="/shopapp/:businessId/product/:productId" replace />} />
-                  <Route path="/webstore" element={<Navigate to="/dashboard/webstore" replace />} />
-                  
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-              </Suspense>
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    !session ? (
+                      <LandingPage />
+                    ) : (
+                      <Navigate to="/dashboard" replace />
+                    )
+                  }
+                />
+                <Route
+                  path="/auth"
+                  element={
+                    !session ? (
+                      <AuthPage mode="login" />
+                    ) : (
+                      <Navigate to="/dashboard" replace />
+                    )
+                  }
+                />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-of-service" element={<TermsOfService />} />
+                
+                {/* Protected routes - will redirect to auth if not logged in */}
+                <Route
+                  path="/dashboard/*"
+                  element={
+                    <ProtectedRoute>
+                      <Index />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/dashboard/profile/setup"
+                  element={
+                    <ProtectedRoute>
+                      <BusinessProfileSetupPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/dashboard/subscription"
+                  element={
+                    <ProtectedRoute>
+                      <SubscriptionPage />
+                    </ProtectedRoute>
+                  }
+                />
+                
+                {/* Public store routes - can be accessed without auth */}
+                <Route path="/shopapp/:businessId" element={<StorePage />} />
+                <Route path="/shopapp/:businessId/product/:productId" element={<ProductDetailPage />} />
+                
+                {/* Redirects from old routes */}
+                <Route path="/:businessId" element={<Navigate to="/shopapp/:businessId" replace />} />
+                <Route path="/:businessId/product/:productId" element={<Navigate to="/shopapp/:businessId/product/:productId" replace />} />
+                <Route path="/store/:businessId" element={<Navigate to="/shopapp/:businessId" replace />} />
+                <Route path="/store/:businessId/product/:productId" element={<Navigate to="/shopapp/:businessId/product/:productId" replace />} />
+                <Route path="/webstore" element={<Navigate to="/dashboard/webstore" replace />} />
+                
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
             </CartProvider>
           </TenantProvider>
         </BrowserRouter>
