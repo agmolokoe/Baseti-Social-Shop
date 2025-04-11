@@ -1,150 +1,161 @@
 
-import { Link, useLocation } from "react-router-dom"
+import React, { useState } from "react"
+import { useLocation } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import {
-  LayoutDashboard,
-  Users,
-  ShoppingCart,
-  Package,
-  Share2,
-  CreditCard,
-  Store,
+  ArrowLeftRight,
+  BarChart3,
   Building2,
-  BarChart4,
-  Shield
+  CircleDollarSign,
+  Cog,
+  CreditCard,
+  HelpCircle,
+  Home,
+  LayoutDashboard,
+  ListMusic,
+  MessagesSquare,
+  Package,
+  ShieldCheck,
+  Settings,
+  ShoppingBag,
+  ShoppingCart,
+  Users,
+  Share2,
+  Bot,
 } from "lucide-react"
 
-interface DashboardNavProps {
-  isAdmin?: boolean;
+interface NavItemProps {
+  href: string
+  text: string
+  icon: React.ReactNode
+  active?: boolean
+  external?: boolean
+  hideOnMobile?: boolean
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>
 }
 
-export function DashboardNav({ isAdmin = false }: DashboardNavProps) {
-  const location = useLocation()
+const NavItem = ({
+  href,
+  text,
+  icon,
+  active = false,
+  external = false,
+  hideOnMobile = false,
+  onClick,
+}: NavItemProps) => {
+  return (
+    <Link
+      to={href}
+      onClick={onClick}
+      className={cn(
+        "flex items-center text-sm px-3 py-2 rounded-lg hover:bg-white/[0.07]",
+        active ? "text-white bg-white/[0.05]" : "text-white/60",
+        hideOnMobile ? "hidden md:flex" : "flex",
+      )}
+    >
+      <div className="flex items-center">
+        <span className={cn("mr-3 h-5 w-5", active ? "text-white" : "text-white/60")}>{icon}</span>
+        {text}
+      </div>
+    </Link>
+  )
+}
 
-  const isActive = (path: string) => {
-    return location.pathname.startsWith(path)
+interface DashboardNavProps {
+  links?: { text: string; href: string; icon: React.ReactNode }[]
+  isCollapsed?: boolean
+  onToggle?: () => void
+}
+
+export function DashboardNav({ links, isCollapsed, onToggle }: DashboardNavProps) {
+  const location = useLocation()
+  const isActive = (href: string) => {
+    if (href === '/dashboard') {
+      return location.pathname === '/dashboard'
+    }
+    return location.pathname.startsWith(href)
   }
 
   return (
-    <nav className="grid items-start gap-2 p-4">
-      {/* Admin section */}
-      {isAdmin && (
-        <>
-          <div className="px-2 py-2">
-            <h2 className="mb-2 px-2 text-lg font-semibold tracking-tight text-primary">Admin</h2>
-            <div className="space-y-1">
-              <Button
-                asChild
-                variant={isActive("/admin/businesses") ? "secondary" : "ghost"}
-                className="justify-start w-full"
-              >
-                <Link to="/admin/businesses">
-                  <Building2 className="mr-2 h-4 w-4" />
-                  Businesses
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant={isActive("/admin/analytics") ? "secondary" : "ghost"}
-                className="justify-start w-full"
-              >
-                <Link to="/admin/analytics">
-                  <BarChart4 className="mr-2 h-4 w-4" />
-                  Platform Analytics
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant={isActive("/admin/settings") ? "secondary" : "ghost"}
-                className="justify-start w-full"
-              >
-                <Link to="/admin/settings">
-                  <Shield className="mr-2 h-4 w-4" />
-                  Admin Settings
-                </Link>
-              </Button>
-            </div>
-          </div>
-          
-          <div className="px-3 py-2">
-            <div className="h-[1px] w-full bg-gray-800 mb-2" />
-            <h2 className="mb-2 px-2 text-lg font-semibold tracking-tight">Business</h2>
-          </div>
-        </>
-      )}
-      
-      {/* Standard business navigation */}
-      <Button
-        asChild
-        variant={isActive("/dashboard") && !isActive("/dashboard/") ? "secondary" : "ghost"}
-        className="justify-start"
-      >
-        <Link to="/dashboard">
-          <LayoutDashboard className="mr-2 h-4 w-4" />
-          Dashboard
-        </Link>
-      </Button>
-      <Button
-        asChild
-        variant={isActive("/dashboard/customers") ? "secondary" : "ghost"}
-        className="justify-start"
-      >
-        <Link to="/dashboard/customers">
-          <Users className="mr-2 h-4 w-4" />
-          Customers
-        </Link>
-      </Button>
-      <Button
-        asChild
-        variant={isActive("/dashboard/orders") ? "secondary" : "ghost"}
-        className="justify-start"
-      >
-        <Link to="/dashboard/orders">
-          <ShoppingCart className="mr-2 h-4 w-4" />
-          Orders
-        </Link>
-      </Button>
-      <Button
-        asChild
-        variant={isActive("/dashboard/products") ? "secondary" : "ghost"}
-        className="justify-start"
-      >
-        <Link to="/dashboard/products">
-          <Package className="mr-2 h-4 w-4" />
-          Products
-        </Link>
-      </Button>
-      <Button
-        asChild
-        variant={isActive("/dashboard/social") ? "secondary" : "ghost"}
-        className="justify-start"
-      >
-        <Link to="/dashboard/social">
-          <Share2 className="mr-2 h-4 w-4" />
-          Social
-        </Link>
-      </Button>
-      <Button
-        asChild
-        variant={isActive("/dashboard/subscription") ? "secondary" : "ghost"}
-        className="justify-start"
-      >
-        <Link to="/dashboard/subscription">
-          <CreditCard className="mr-2 h-4 w-4" />
-          Subscription
-        </Link>
-      </Button>
-      <Button
-        asChild
-        variant={isActive("/dashboard/view-store") ? "secondary" : "ghost"}
-        className="justify-start"
-      >
-        <Link to="/dashboard/view-store">
-          <Store className="mr-2 h-4 w-4" />
-          View Store
-        </Link>
-      </Button>
-    </nav>
+    <div data-collapsed={isCollapsed} className={cn("group border-r border-r-white/[0.06]")}>
+      <div className="p-2 space-y-1">
+        <NavItem 
+          href="/dashboard"
+          text="Dashboard" 
+          icon={<LayoutDashboard size={18} />} 
+          active={isActive('/dashboard')}
+        />
+        <NavItem 
+          href="/dashboard/products" 
+          text="Products" 
+          icon={<Package size={18} />} 
+          active={isActive('/dashboard/products')} 
+        />
+        <NavItem 
+          href="/dashboard/orders" 
+          text="Orders" 
+          icon={<ShoppingCart size={18} />} 
+          active={isActive('/dashboard/orders')} 
+        />
+        <NavItem 
+          href="/dashboard/customers" 
+          text="Customers" 
+          icon={<Users size={18} />} 
+          active={isActive('/dashboard/customers')} 
+        />
+        <NavItem 
+          href="/dashboard/webstore" 
+          text="Store" 
+          icon={<ShoppingBag size={18} />} 
+          active={isActive('/dashboard/webstore')} 
+        />
+        <NavItem 
+          href="/dashboard/social" 
+          text="Social" 
+          icon={<Share2 size={18} />} 
+          active={isActive('/dashboard/social')} 
+        />
+        <NavItem 
+          href="/dashboard/genkit" 
+          text="Genkit AI" 
+          icon={<Bot size={18} />} 
+          active={isActive('/dashboard/genkit')} 
+        />
+        <NavItem 
+          href="/dashboard/reports" 
+          text="Reports" 
+          icon={<BarChart3 size={18} />} 
+          active={isActive('/dashboard/reports')} 
+          hideOnMobile
+        />
+        <NavItem 
+          href="/dashboard/marketing" 
+          text="Marketing" 
+          icon={<CircleDollarSign size={18} />} 
+          active={isActive('/dashboard/marketing')} 
+          hideOnMobile
+        />
+        <NavItem 
+          href="/dashboard/settings" 
+          text="Settings" 
+          icon={<Cog size={18} />} 
+          active={isActive('/dashboard/settings')}
+        />
+        <NavItem 
+          href="/dashboard/subscription" 
+          text="Subscription" 
+          icon={<CreditCard size={18} />} 
+          active={isActive('/dashboard/subscription')}
+        />
+        <NavItem 
+          href="/dashboard/support" 
+          text="Support" 
+          icon={<HelpCircle size={18} />} 
+          active={isActive('/dashboard/support')} 
+          hideOnMobile
+        />
+      </div>
+    </div>
   )
 }

@@ -21,6 +21,7 @@ import SubscriptionPage from "./pages/subscription/Index"
 import BusinessProfileSetupPage from "./pages/profile/BusinessProfileSetupPage"
 import StorePage from "./pages/store/StorePage"
 import ProductDetailPage from "./pages/store/ProductDetailPage"
+import GenkitPage from "./pages/genkit/Index"
 
 // Loading component
 const PageLoader = () => (
@@ -188,6 +189,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <SubscriptionPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/dashboard/genkit"
+                  element={
+                    <ProtectedRoute>
+                      <GenkitPage />
                     </ProtectedRoute>
                   }
                 />
