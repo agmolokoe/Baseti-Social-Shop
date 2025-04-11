@@ -11,11 +11,11 @@ import { CartProvider } from "./context/CartContext"
 import { TenantProvider } from "@/middleware"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 
-// Import AuthPage directly instead of lazy loading
+// Import pages directly for better stability with authentication
 import AuthPage from "./pages/AuthPage"
+import LandingPage from "./pages/LandingPage"
 
-// Lazy load other pages
-const LandingPage = lazy(() => import("./pages/LandingPage"))
+// Lazy load other pages that don't need immediate loading
 const Index = lazy(() => import("./pages/Index"))
 const PrivacyPolicy = lazy(() => import("./pages/legal/PrivacyPolicy"))
 const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"))
