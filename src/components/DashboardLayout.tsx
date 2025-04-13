@@ -15,6 +15,7 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { currentTenantId, tenantName, isAdmin, isTenantLoading } = useTenant();
+  const [businessProfile, setBusinessProfile] = useState<any>(null);
 
   // Admin mode alert display state
   const [showAdminAlert, setShowAdminAlert] = useState(false);
@@ -64,7 +65,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className="lg:pl-64">
         <TopBar 
           onOpenSidebar={() => setSidebarOpen(true)}
-          businessProfile={null}
+          businessProfile={businessProfile}
         />
 
         {showAdminAlert && (

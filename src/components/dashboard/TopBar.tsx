@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, ChevronDown } from "lucide-react";
@@ -15,7 +16,7 @@ import { supabase } from "@/lib/supabase";
 
 interface TopBarProps {
   onOpenSidebar: () => void;
-  businessProfile: any;
+  businessProfile: any | null;
 }
 
 export function TopBar({ onOpenSidebar, businessProfile }: TopBarProps) {
