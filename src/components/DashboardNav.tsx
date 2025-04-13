@@ -62,7 +62,7 @@ const NavItem = ({
   )
 }
 
-interface DashboardNavProps {
+export interface DashboardNavProps {
   links?: { text: string; href: string; icon: React.ReactNode }[]
   isCollapsed?: boolean
   onToggle?: () => void

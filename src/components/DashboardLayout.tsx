@@ -58,7 +58,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <X className="h-5 w-5" />
           </button>
         </div>
-        <DashboardNav isAdmin={isAdmin} />
+        <DashboardNav />
       </div>
 
       <div className="lg:pl-64">
