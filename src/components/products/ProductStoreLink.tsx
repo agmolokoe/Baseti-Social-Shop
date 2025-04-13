@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { ExternalLink, Store } from "lucide-react"
 import { useState } from "react"
 import { motion } from "framer-motion"
+import { Link } from "react-router-dom"
 
 interface ProductStoreLinkProps {
   businessId: string | null;
@@ -18,6 +19,7 @@ export function ProductStoreLink({
   const [isHovering, setIsHovering] = useState(false);
   
   const getStoreUrl = () => {
+    if (!businessId) return '#';
     return `/shopapp/${businessId}`;
   };
 
@@ -31,6 +33,10 @@ export function ProductStoreLink({
       return `text-[#FFFFFF] border-[#25F4EE]/40 relative overflow-hidden ${isHovering ? 'bg-[#25F4EE]/10' : 'hover:bg-[#25F4EE]/10'}`;
     }
   };
+
+  if (!businessId) {
+    return null;
+  }
 
   return (
     <div className={`${variant !== 'subtle' ? 'mt-6 pt-4 border-t border-[#FFFFFF]/10' : ''} ${className}`}>

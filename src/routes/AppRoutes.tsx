@@ -83,6 +83,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({ session }) => {
       {/* Public store routes - can be accessed without auth */}
       <Route path="/shopapp/:businessId" element={<StorePage />} />
       <Route path="/shopapp/:businessId/product/:productId" element={<ProductDetailPage />} />
+      <Route path="/shopapp/:businessId/category/:category" element={<StorePage />} />
       
       {/* Redirects from old routes */}
       <Route path="/:businessId" element={<Navigate to="/shopapp/:businessId" replace />} />

@@ -18,10 +18,20 @@ export default function StorePage() {
   const [businessProfile, setBusinessProfile] = useState<any>(null)
   
   const fetchStoreData = useCallback(async () => {
-    if (!businessId) return;
+    if (!businessId) {
+      console.error("No business ID provided");
+      toast({
+        title: "Error",
+        description: "Store information couldn't be loaded",
+        variant: "destructive",
+      });
+      setLoading(false);
+      return;
+    }
     
     try {
-      setLoading(true)
+      setLoading(true);
+      console.log("Fetching store data for business ID:", businessId);
       
       // Fetch both business profile and products in parallel
       const [profileResponse, productsResponse] = await Promise.all([
@@ -37,8 +47,18 @@ export default function StorePage() {
           .eq('business_id', businessId)
       ]);
       
-      if (profileResponse.error) throw profileResponse.error;
-      if (productsResponse.error) throw productsResponse.error;
+      if (profileResponse.error) {
+        console.error("Error fetching business profile:", profileResponse.error);
+        throw profileResponse.error;
+      }
+      
+      if (productsResponse.error) {
+        console.error("Error fetching products:", productsResponse.error);
+        throw productsResponse.error;
+      }
+      
+      console.log("Business profile fetched:", profileResponse.data);
+      console.log("Products fetched:", productsResponse.data?.length || 0, "items");
       
       setBusinessProfile(profileResponse.data);
       setProducts(productsResponse.data || []);

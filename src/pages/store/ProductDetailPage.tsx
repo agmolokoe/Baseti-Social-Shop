@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from "react"
 import { useParams, Link } from "react-router-dom"
 import { supabase } from "@/lib/supabase"
@@ -22,10 +23,20 @@ function ProductDetail() {
   const [animationComplete, setAnimationComplete] = useState(false)
 
   const fetchProductData = useCallback(async () => {
-    if (!businessId || !productId) return;
+    if (!businessId || !productId) {
+      console.error("Missing parameters - businessId:", businessId, "productId:", productId);
+      toast({
+        title: "Error",
+        description: "Product information couldn't be loaded",
+        variant: "destructive",
+      });
+      setLoading(false);
+      return;
+    }
     
     try {
-      setLoading(true)
+      setLoading(true);
+      console.log("Fetching product data - businessId:", businessId, "productId:", productId);
       
       const [productResponse, profileResponse, relatedResponse] = await Promise.all([
         supabase
@@ -49,10 +60,22 @@ function ProductDetail() {
           .limit(4)
       ]);
       
-      if (productResponse.error) throw productResponse.error;
-      if (profileResponse.error) throw profileResponse.error;
-      if (relatedResponse.error) throw relatedResponse.error;
+      if (productResponse.error) {
+        console.error("Error fetching product:", productResponse.error);
+        throw productResponse.error;
+      }
       
+      if (profileResponse.error) {
+        console.error("Error fetching business profile:", profileResponse.error);
+        throw profileResponse.error;
+      }
+      
+      if (relatedResponse.error) {
+        console.error("Error fetching related products:", relatedResponse.error);
+        throw relatedResponse.error;
+      }
+      
+      console.log("Product data fetched successfully");
       setProduct(productResponse.data);
       setBusinessProfile(profileResponse.data);
       setRelatedProducts(relatedResponse.data || []);
@@ -128,6 +151,7 @@ function ProductDetail() {
         </Button>
       </div>
       
+      {/* Main content */}
       <div className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           <div className="relative" 
@@ -148,17 +172,21 @@ function ProductDetail() {
         </div>
       </div>
       
+      {/* Product details tabs */}
       <div className="container mx-auto px-4 py-12">
         <ProductTabs product={product} businessName={businessProfile.business_name} />
       </div>
       
+      {/* Related products section */}
       <RelatedProducts products={relatedProducts} />
       
+      {/* Footer */}
       <StoreFooter 
         businessName={businessProfile.business_name}
         websiteUrl={businessProfile.website_url}
       />
       
+      {/* Animation styles */}
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes slideInFromLeft {
           0% {
