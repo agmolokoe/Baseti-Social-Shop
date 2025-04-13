@@ -146,8 +146,11 @@ export function ProductForm({
           <ProductPriceFields form={form} />
         </div>
         
-        {selectedProduct?.business_id && (
-          <ProductStoreLink businessId={selectedProduct.business_id} />
+        {selectedProduct?.business_id && selectedProduct?.id && (
+          <ProductStoreLink 
+            businessId={selectedProduct.business_id} 
+            productId={selectedProduct.id}
+          />
         )}
         
         <div className="flex justify-end space-x-2 pt-4 border-t">

@@ -10,22 +10,24 @@ import {
 import { Copy, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-interface ProductStoreLinkProps {
+export interface ProductStoreLinkProps {
   businessId: string;
-  productId: number | string;
+  productId?: number | string;
 }
 
 export function ProductStoreLink({ businessId, productId }: ProductStoreLinkProps) {
   const { toast } = useToast();
   
-  // Generate the absolute store link for the product
-  const storeLink = `${window.location.origin}/shopapp/${businessId}/product/${productId}`;
+  // Generate the absolute store link for the product or store
+  const storeLink = productId 
+    ? `${window.location.origin}/shopapp/${businessId}/product/${productId}` 
+    : `${window.location.origin}/shopapp/${businessId}`;
   
   const handleCopyLink = () => {
     navigator.clipboard.writeText(storeLink);
     toast({
       title: "Link copied!",
-      description: "Product link copied to clipboard",
+      description: "Link copied to clipboard",
     });
   };
   
@@ -53,7 +55,7 @@ export function ProductStoreLink({ businessId, productId }: ProductStoreLinkProp
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Copy product link</p>
+            <p>Copy link</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
