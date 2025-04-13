@@ -15,6 +15,7 @@ import StorePage from "@/pages/store/StorePage";
 import ProductDetailPage from "@/pages/store/ProductDetailPage";
 import SubscriptionPage from "@/pages/subscription/Index";
 import GenkitPage from "@/pages/genkit/Index";
+import WebStorePage from "@/pages/webstore/Index";
 
 interface AppRoutesProps {
   session: Session | null;
@@ -76,6 +77,14 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({ session }) => {
         element={
           <ProtectedRoute>
             <GenkitPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/webstore"
+        element={
+          <ProtectedRoute>
+            <WebStorePage />
           </ProtectedRoute>
         }
       />

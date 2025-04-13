@@ -1,12 +1,13 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { StoreHeader } from "@/components/store/view-store/StoreHeader";
-import { BusinessProfileContent } from "@/components/store/view-store/BusinessProfileContent";
-import { ProfileNotFound } from "@/components/store/view-store/ProfileNotFound";
+import { BusinessProfileCard } from "@/components/store/view-store/BusinessProfileCard";
 import { StoreManagementSection } from "@/components/store/view-store/StoreManagementSection";
+import { ProfileNotFound } from "@/components/store/view-store/ProfileNotFound";
 import { LoadingSkeleton } from "@/components/store/view-store/LoadingSkeleton";
 
 export default function ViewStorePage() {
@@ -58,23 +59,30 @@ export default function ViewStorePage() {
     }
   };
 
+  if (loading) {
+    return <LoadingSkeleton />;
+  }
+
+  if (!businessProfile) {
+    return <ProfileNotFound />;
+  }
+
   return (
     <div className="container mx-auto p-6">
       <StoreHeader 
-        businessProfile={businessProfile} 
-        handleViewStore={handleViewStore} 
+        businessProfile={businessProfile}
+        handleViewStore={handleViewStore}
       />
-
-      {loading ? (
-        <LoadingSkeleton />
-      ) : businessProfile ? (
-        <>
-          <BusinessProfileContent businessProfile={businessProfile} />
-          <StoreManagementSection />
-        </>
-      ) : (
-        <ProfileNotFound />
-      )}
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="col-span-1">
+          <BusinessProfileCard businessProfile={businessProfile} />
+        </div>
+        
+        <div className="col-span-1 md:col-span-2">
+          <StoreManagementSection businessProfile={businessProfile} />
+        </div>
+      </div>
     </div>
   );
 }

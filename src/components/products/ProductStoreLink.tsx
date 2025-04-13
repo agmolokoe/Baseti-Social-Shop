@@ -1,75 +1,81 @@
 
-import { Button } from "@/components/ui/button"
-import { ExternalLink, Store } from "lucide-react"
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { Link } from "react-router-dom"
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { Copy, ExternalLink } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface ProductStoreLinkProps {
-  businessId: string | null;
-  variant?: 'default' | 'outline' | 'subtle';
-  className?: string;
+  businessId: string;
+  productId: number | string;
 }
 
-export function ProductStoreLink({ 
-  businessId, 
-  variant = 'outline',
-  className = ''
-}: ProductStoreLinkProps) {
-  const [isHovering, setIsHovering] = useState(false);
+export function ProductStoreLink({ businessId, productId }: ProductStoreLinkProps) {
+  const { toast } = useToast();
   
-  const getStoreUrl = () => {
-    if (!businessId) return '#';
-    return `/shopapp/${businessId}`;
+  // Generate the absolute store link for the product
+  const storeLink = `${window.location.origin}/shopapp/${businessId}/product/${productId}`;
+  
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(storeLink);
+    toast({
+      title: "Link copied!",
+      description: "Product link copied to clipboard",
+    });
   };
-
-  // Different styles based on variant
-  const getButtonStyles = () => {
-    if (variant === 'default') {
-      return `bg-[#25F4EE] text-black hover:bg-[#25F4EE]/90 ${isHovering ? 'bg-[#25F4EE]/90' : ''}`;
-    } else if (variant === 'subtle') {
-      return `bg-transparent text-[#25F4EE] hover:bg-[#25F4EE]/10 ${isHovering ? 'bg-[#25F4EE]/10' : ''}`;
-    } else {
-      return `text-[#FFFFFF] border-[#25F4EE]/40 relative overflow-hidden ${isHovering ? 'bg-[#25F4EE]/10' : 'hover:bg-[#25F4EE]/10'}`;
-    }
+  
+  const handleOpenLink = () => {
+    window.open(storeLink, '_blank');
   };
-
-  if (!businessId) {
-    return null;
-  }
-
+  
   return (
-    <div className={`${variant !== 'subtle' ? 'mt-6 pt-4 border-t border-[#FFFFFF]/10' : ''} ${className}`}>
-      <motion.div
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-      >
-        <Button
-          type="button"
-          variant={variant === 'default' ? 'default' : 'outline'}
-          className={`w-full group transition-all duration-300 ${getButtonStyles()}`}
-          onClick={() => window.open(getStoreUrl(), '_blank')}
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-[#25F4EE]/0 via-[#25F4EE]/10 to-[#25F4EE]/0 animate-shimmer opacity-0 group-hover:opacity-100" 
-               style={{ backgroundSize: '200% 100%' }} />
-          
-          <motion.div
-            animate={isHovering ? { rotate: [0, 15, -15, 0] } : {}}
-            transition={{ duration: 0.5 }}
-          >
-            <Store className="mr-2 h-4 w-4" />
-          </motion.div>
-          <span>View Your Store</span>
-          <motion.div
-            animate={isHovering ? { x: [0, 3, 0], y: [0, -3, 0] } : {}}
-            transition={{ duration: 0.5 }}
-          >
-            <ExternalLink className="ml-2 h-4 w-4" />
-          </motion.div>
-        </Button>
-      </motion.div>
+    <div className="flex items-center space-x-2">
+      <div className="flex-1 bg-muted rounded p-2 text-xs overflow-hidden text-ellipsis">
+        <span className="text-muted-foreground">{storeLink}</span>
+      </div>
+      
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button 
+              variant="outline"
+              size="icon"
+              onClick={handleCopyLink}
+              className="h-8 w-8"
+            >
+              <Copy className="h-4 w-4" />
+              <span className="sr-only">Copy link</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Copy product link</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button 
+              variant="outline"
+              size="icon"
+              onClick={handleOpenLink}
+              className="h-8 w-8"
+            >
+              <ExternalLink className="h-4 w-4" />
+              <span className="sr-only">Open in new tab</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Open in new tab</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
   );
 }
