@@ -11,7 +11,7 @@ import { StoreProductList } from "@/components/store/StoreProductList"
 import { StoreFooter } from "@/components/store/StoreFooter"
 
 export default function StorePage() {
-  const { businessId } = useParams<{ businessId: string }>()
+  const { businessId, categoryName } = useParams<{ businessId: string; categoryName?: string }>()
   const { toast } = useToast()
   const [loading, setLoading] = useState(true)
   const [products, setProducts] = useState<any[]>([])
@@ -97,8 +97,25 @@ export default function StorePage() {
     )
   }
 
-  // Extract categories (for demo, we'll create some mock categories)
+  // Define categories
   const categories = ['All Products', 'New Arrivals', 'Best Sellers'];
+  
+  // Filter products by category if needed
+  const filteredProducts = categoryName && categoryName !== 'All Products' 
+    ? products.filter(product => {
+        if (categoryName === 'New Arrivals') {
+          // Example logic for "New Arrivals" - products added in the last 30 days
+          const thirtyDaysAgo = new Date();
+          thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+          return new Date(product.created_at) >= thirtyDaysAgo;
+        } else if (categoryName === 'Best Sellers') {
+          // Example logic for "Best Sellers" - products with high ratings or sales
+          return product.is_featured === true;
+        }
+        // Add more category filters as needed
+        return true;
+      })
+    : products;
 
   return (
     <CartProvider>
@@ -119,10 +136,10 @@ export default function StorePage() {
           {businessId && <FeaturedProducts businessId={businessId} />}
         </section>
         
-        {/* All Products Section */}
+        {/* Products Section - With category filtering */}
         <StoreProductList 
-          products={products} 
-          title="All Products" 
+          products={filteredProducts} 
+          title={categoryName || "All Products"} 
         />
         
         {/* Store Footer */}

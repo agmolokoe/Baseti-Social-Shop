@@ -24,6 +24,7 @@ export function StoreNavigation({
 }: StoreNavigationProps) {
   const [scrolled, setScrolled] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,6 +38,12 @@ export function StoreNavigation({
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Implement search functionality
+    console.log("Searching for:", searchQuery);
+  };
 
   return (
     <header 
@@ -65,10 +72,10 @@ export function StoreNavigation({
                 <span className="font-medium">Home</span>
               </Link>
               
-              {categories.map((category) => (
+              {categories && categories.map((category) => (
                 <Link 
                   key={category} 
-                  to={`/shopapp/${businessId}/category/${category}`}
+                  to={`/shopapp/${businessId}/category/${encodeURIComponent(category)}`}
                   className="flex items-center space-x-3 p-2 rounded-md hover:bg-white/5 transition-colors"
                 >
                   <Package className="h-5 w-5 text-[#FE2C55]" />
@@ -77,13 +84,15 @@ export function StoreNavigation({
               ))}
               
               <div className="pt-4">
-                <div className="relative">
+                <form onSubmit={handleSearch} className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input 
                     placeholder="Search products..." 
                     className="w-full pl-10 bg-white/5 border-white/10 focus:border-[#25F4EE]"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                   />
-                </div>
+                </form>
               </div>
             </nav>
           </SheetContent>
@@ -107,10 +116,10 @@ export function StoreNavigation({
             <span>Home</span>
           </Link>
           
-          {categories.map((category) => (
+          {categories && categories.map((category) => (
             <Link 
               key={category} 
-              to={`/shopapp/${businessId}/category/${category}`}
+              to={`/shopapp/${businessId}/category/${encodeURIComponent(category)}`}
               className="px-3 py-2 text-sm font-medium rounded-md hover:bg-white/5 transition-colors"
             >
               {category}
@@ -119,7 +128,8 @@ export function StoreNavigation({
         </nav>
         
         <div className="flex items-center gap-4">
-          <div 
+          <form 
+            onSubmit={handleSearch}
             className={`hidden md:flex relative transition-all duration-300 ${
               searchFocused ? 'w-[300px]' : 'w-[200px] lg:w-[250px]'
             }`}
@@ -131,8 +141,10 @@ export function StoreNavigation({
               className="w-full pl-10 bg-black/50 border-white/10 focus:border-[#25F4EE] transition-all duration-300"
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setSearchFocused(false)}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-          </div>
+          </form>
           
           <Button 
             variant="ghost" 
