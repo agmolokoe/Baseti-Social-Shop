@@ -19,7 +19,7 @@ export function StoreManagementSection({ businessProfile }: StoreManagementSecti
           <CardTitle>Store Management</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <StoreUrlSection businessId={businessProfile?.id} />
+          <StoreUrlSection businessProfile={businessProfile} />
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
             <ManagementCard
