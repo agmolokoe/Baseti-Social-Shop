@@ -7,6 +7,7 @@ import { TopBar } from "./dashboard/TopBar";
 import { useTenant } from "@/middleware";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { supabase } from "@/lib/supabase";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -24,6 +25,28 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   useEffect(() => {
     const isImpersonating = localStorage.getItem('adminUserId') === 'true' && currentTenantId;
     setShowAdminAlert(!!isImpersonating); // Convert to boolean with !! to fix the TypeScript error
+  }, [currentTenantId]);
+
+  // Fetch business profile
+  useEffect(() => {
+    const fetchBusinessProfile = async () => {
+      if (currentTenantId) {
+        try {
+          const { data, error } = await supabase
+            .from('business_profiles')
+            .select('*')
+            .eq('id', currentTenantId)
+            .maybeSingle();
+          
+          if (error) throw error;
+          setBusinessProfile(data);
+        } catch (error) {
+          console.error('Error fetching business profile in DashboardLayout:', error);
+        }
+      }
+    };
+    
+    fetchBusinessProfile();
   }, [currentTenantId]);
 
   // Exit impersonation mode
