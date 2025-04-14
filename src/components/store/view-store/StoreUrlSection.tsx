@@ -44,7 +44,7 @@ export function StoreUrlSection({ businessProfile }: StoreUrlSectionProps) {
           className="bg-black/50 p-3 rounded-md flex-1 overflow-x-auto font-mono text-white/80 border border-white/10"
           whileHover={{ borderColor: "rgba(37, 244, 238, 0.3)" }}
         >
-          www.baseti.co.za/shopapp/{businessProfile.id}
+          www.baseti.co.za/shopapp/{businessProfile?.id}
         </motion.code>
         <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
           <Button 
