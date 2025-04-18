@@ -41,22 +41,10 @@ export function DashboardSideNav() {
       active: pathname.startsWith("/dashboard/products"),
     },
     {
-      title: "Customers",
-      href: "/dashboard/customers",
-      icon: <Users className="h-5 w-5" />,
-      active: pathname.startsWith("/dashboard/customers"),
-    },
-    {
       title: "Orders",
       href: "/dashboard/orders",
       icon: <ShoppingCart className="h-5 w-5" />,
       active: pathname.startsWith("/dashboard/orders"),
-    },
-    {
-      title: "Social Marketing",
-      href: "/dashboard/social",
-      icon: <Share2 className="h-5 w-5" />,
-      active: pathname.startsWith("/dashboard/social"),
     },
     {
       title: "View Store",
@@ -65,28 +53,30 @@ export function DashboardSideNav() {
       active: pathname.startsWith("/dashboard/view-store"),
     },
     {
+      title: "Social Marketing",
+      href: "/dashboard/social",
+      icon: <Share2 className="h-5 w-5" />,
+      active: pathname.startsWith("/dashboard/social"),
+    },
+    {
       title: "Reports",
       href: "/dashboard/reports",
       icon: <FileText className="h-5 w-5" />,
       active: pathname.startsWith("/dashboard/reports"),
-    },
-    {
-      title: "Marketing",
-      href: "/dashboard/marketing",
-      icon: <Sparkles className="h-5 w-5" />,
-      active: pathname.startsWith("/dashboard/marketing"),
-    },
-    {
-      title: "Support",
-      href: "/dashboard/support",
-      icon: <MessageSquare className="h-5 w-5" />,
-      active: pathname.startsWith("/dashboard/support"),
+      hideOnMobile: true,
     },
     {
       title: "Settings",
       href: "/dashboard/settings",
       icon: <Settings className="h-5 w-5" />,
       active: pathname.startsWith("/dashboard/settings"),
+    },
+    {
+      title: "Support",
+      href: "/dashboard/support",
+      icon: <MessageSquare className="h-5 w-5" />,
+      active: pathname.startsWith("/dashboard/support"),
+      hideOnMobile: true,
     },
   ];
 
@@ -106,7 +96,8 @@ export function DashboardSideNav() {
               link.active 
                 ? "bg-gradient-to-r from-[#25F4EE] to-[#FE2C55] text-white" 
                 : "hover:bg-white/10",
-              link.highlight && "border-l-4 border-[#25F4EE]"
+              link.highlight && "border-l-4 border-[#25F4EE]",
+              link.hideOnMobile && "hidden md:flex"
             )}
           >
             <span className={cn(
