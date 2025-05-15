@@ -16,6 +16,11 @@ import ProductDetailPage from "@/pages/store/ProductDetailPage";
 import SubscriptionPage from "@/pages/subscription/Index";
 import GenkitPage from "@/pages/genkit/Index";
 import WebStorePage from "@/pages/webstore/Index";
+import CustomersPage from "@/pages/customers/Index";
+import OrdersPage from "@/pages/orders/Index";
+import ProductsPage from "@/pages/products/Index";
+import SocialPage from "@/pages/social/Index";
+import ViewStorePage from "@/pages/dashboard/ViewStorePage";
 
 interface AppRoutesProps {
   session: Session | null;
@@ -85,6 +90,46 @@ export const AppRoutes: React.FC<AppRoutesProps> = ({ session }) => {
         element={
           <ProtectedRoute>
             <WebStorePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/customers"
+        element={
+          <ProtectedRoute>
+            <CustomersPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/orders"
+        element={
+          <ProtectedRoute>
+            <OrdersPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/products"
+        element={
+          <ProtectedRoute>
+            <ProductsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/social"
+        element={
+          <ProtectedRoute>
+            <SocialPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/view-store"
+        element={
+          <ProtectedRoute>
+            <ViewStorePage />
           </ProtectedRoute>
         }
       />

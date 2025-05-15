@@ -24,7 +24,6 @@ export default function Index() {
       <Route path="/orders" element={<OrdersPage />} />
       <Route path="/customers" element={<CustomersPage />} />
       <Route path="/webstore" element={<WebStorePage />} />
-      <Route path="/webstore/view" element={<ViewStorePage />} />
       <Route path="/view-store" element={<ViewStorePage />} />
       <Route path="/reports" element={<ReportsPage />} />
       <Route path="/marketing" element={<MarketingPage />} />

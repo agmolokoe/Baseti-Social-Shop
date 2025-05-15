@@ -28,13 +28,6 @@ export function DashboardSideNav() {
       active: pathname === "/dashboard",
     },
     {
-      title: "Webstore",
-      href: "/dashboard/webstore",
-      icon: <Store className="h-5 w-5 text-[#25F4EE]" />,
-      active: pathname.startsWith("/dashboard/webstore"),
-      highlight: true,
-    },
-    {
       title: "Products",
       href: "/dashboard/products",
       icon: <Package className="h-5 w-5" />,
@@ -47,16 +40,36 @@ export function DashboardSideNav() {
       active: pathname.startsWith("/dashboard/orders"),
     },
     {
+      title: "Customers",
+      href: "/dashboard/customers",
+      icon: <Users className="h-5 w-5" />,
+      active: pathname.startsWith("/dashboard/customers"),
+    },
+    {
+      title: "Webstore",
+      href: "/dashboard/webstore",
+      icon: <Store className="h-5 w-5 text-[#25F4EE]" />,
+      active: pathname.startsWith("/dashboard/webstore"),
+      highlight: true,
+    },
+    {
       title: "View Store",
       href: "/dashboard/view-store",
       icon: <Globe className="h-5 w-5" />,
       active: pathname.startsWith("/dashboard/view-store"),
     },
     {
-      title: "Social Marketing",
+      title: "Social",
       href: "/dashboard/social",
       icon: <Share2 className="h-5 w-5" />,
       active: pathname.startsWith("/dashboard/social"),
+    },
+    {
+      title: "Marketing",
+      href: "/dashboard/marketing",
+      icon: <Sparkles className="h-5 w-5" />,
+      active: pathname.startsWith("/dashboard/marketing"),
+      hideOnMobile: true,
     },
     {
       title: "Reports",

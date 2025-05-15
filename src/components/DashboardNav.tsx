@@ -4,25 +4,22 @@ import { useLocation } from "react-router-dom"
 import { Link } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import {
-  ArrowLeftRight,
   BarChart3,
   Building2,
   CircleDollarSign,
   Cog,
   CreditCard,
   HelpCircle,
-  Home,
   LayoutDashboard,
-  ListMusic,
-  MessagesSquare,
+  MessageSquare,
   Package,
-  ShieldCheck,
   Settings,
   ShoppingBag,
   ShoppingCart,
   Users,
   Share2,
   Bot,
+  Globe,
 } from "lucide-react"
 
 interface NavItemProps {
@@ -109,6 +106,12 @@ export function DashboardNav({ links, isCollapsed, onToggle }: DashboardNavProps
           text="Store" 
           icon={<ShoppingBag size={18} />} 
           active={isActive('/dashboard/webstore')} 
+        />
+        <NavItem 
+          href="/dashboard/view-store" 
+          text="View Store" 
+          icon={<Globe size={18} />} 
+          active={isActive('/dashboard/view-store')} 
         />
         <NavItem 
           href="/dashboard/social" 
