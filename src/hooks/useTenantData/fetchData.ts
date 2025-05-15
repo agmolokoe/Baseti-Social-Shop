@@ -24,7 +24,7 @@ export async function fetchData({
     order?: { column: string; ascending?: boolean };
     limit?: number;
     page?: number;
-    additionalFilters?: (query: PostgrestFilterBuilder<any, any, unknown>) => any;
+    additionalFilters?: (query: any) => any;
   }
 }) {
   try {
@@ -41,7 +41,7 @@ export async function fetchData({
     } = options;
     
     // Start with tenant-isolated query
-    let query: PostgrestFilterBuilder<any, any, unknown> = supabase.from(tableName).select(columns);
+    let query = supabase.from(tableName).select(columns);
     
     // Apply tenant filter
     if (currentTenantId && (!isAdmin || (isAdmin && currentTenantId))) {
